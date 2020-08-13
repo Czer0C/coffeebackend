@@ -1,0 +1,18 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "sua tuoi",
+      "price": 25000,
+      "image": "/ca-phe-da-xay.jpg",
+      "category": 1
+    },
+    {
+      "id": 2,
+      "name": "sua abv",
+      "price": 20000,
+      "image": "/ca-phe-da-xay.jpg",
+      "category": 1
+    }
+  ]
+}

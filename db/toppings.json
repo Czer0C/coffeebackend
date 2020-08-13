@@ -1,0 +1,19 @@
+{
+    "topping": [
+        {
+            "id": 1,
+            "price": 5000,
+            "value": "Sữa thêm"
+        },
+        {
+            "id": 2,
+            "price": 15000,
+            "value": "Trân châu trắng"
+        },
+        {
+            "id": 1,
+            "price": 5000,
+            "value": "Sữa tươi"
+        }
+    ]
+}
