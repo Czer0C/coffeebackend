@@ -1,5 +1,5 @@
 {
-    "topping": [
+    "toppings": [
         {
             "id": 1,
             "price": 5000,
@@ -11,7 +11,7 @@
             "value": "Trân châu trắng"
         },
         {
-            "id": 1,
+            "id": 3,
             "price": 5000,
             "value": "Sữa tươi"
         }

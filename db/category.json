@@ -1,15 +1,15 @@
 {
     "category": [
         {
-            "id": 1,
+            "id": "1",
             "value": "Cà phê"
         },
         {
-            "id": 2,
+            "id": "2",
             "value": "Trà sữa"
         },
         {
-            "id": 3,
+            "id": "3",
             "value": "Nước ép"
         }
     ]
