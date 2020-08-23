@@ -1,52 +1,108 @@
 {
   "products": [
     {
-    "id": "0",
-    "name": "Cà Phê",
-    "price": "15000",
-    "category": "1",
-    "toppings": [1, 3],
-    "image": "cafe-den.jpg"
-  },
-  {
-    "id": "1",
-    "name": "Cappuccino",
-    "price": "55000",
-    "category": "1",
-    "image": "cappuchino.jpg"
-  },
-  {
-    "id": "2",
-    "name": "Bạc Sỉu",
-    "price": "20000",
-    "category": "1",
-    "toppings": [1, 3],
-    "image": "bac-siu.jpg"
-  }, 
-  {
-    "id": "3",
-    "name": "Trà Sữa Hong-Kong",
-    "price": "45000",
-    "category": "2",
-    "toppings": [2],
-    "image": "tra-sua-hong-kong.jpg"
-  },
-  {
-    "id": "4",
-    "name": "Trà Sữa Socola",
-    "price": "45000",
-    "category": "2",
-    "toppings": [2],
-    "image": "tra-sua-socola.jpg"
-  },
-  {
-    "id": "5",
-    "name": "Trà Sữa Trân Châu Vị Dâu",
-    "price": "20000",
-    "category": "2",
-    "toppings": [2],
-    "image": "tra-sua-dau.jpg"
-  }
-	
+      "category": "1",
+      "id": "1",
+      "image": "602ac0744f6433-cphcappuccino.png",
+      "name": "Cappuccino",
+      "price": "55000",
+      "toppings": []
+    },
+    {
+      "category": "1",
+      "id": "2",
+      "image": "90381e848a1bb3-cphvanilla.png",
+      "name": "Cà Phê Vani",
+      "price": "20000",
+      "toppings": [
+        1,
+        3
+      ]
+    },
+    {
+      "category": "2",
+      "id": "3",
+      "image": "d6fb6a8a92fe40-trxanhlatte.png",
+      "name": "Trà Sữa Mattcha",
+      "price": "45000",
+      "toppings": [
+        2
+      ]
+    },
+    {
+      "category": "2",
+      "id": "4",
+      "image": "d986f8908cdd27-trsaphclong.png",
+      "name": "Trà Sữa Truyền Thống",
+      "price": "45000",
+      "toppings": [
+        2
+      ]
+    },
+    {
+      "category": "2",
+      "id": "5",
+      "image": "23fbc8fc31884c-dup.png",
+      "name": "Trà Dâu",
+      "price": "20000",
+      "toppings": [
+        2
+      ]
+    },
+    {
+      "category": "1",
+      "id": "6",
+      "image": "6b56bf9072328b-latteraspberryalmond.png",
+      "name": "Latte Strawberry",
+      "price": "45000",
+      "toppings": [
+        1,
+        3
+      ]
+    },
+    {
+      "category": "2",
+      "id": "7",
+      "image": "5316b04006d856-trcocktailphclong.png",
+      "name": "Trà Cocktail",
+      "price": "15000",
+      "toppings": [
+        1,
+        3
+      ]
+    },
+    {
+      "category": "3",
+      "id": "8",
+      "image": "4cebb077373630-sinhttricynhiti.png",
+      "name": "Sinh Tố Capoche",
+      "price": "35000",
+      "toppings": [
+        1,
+        3
+      ]
+    },
+    {
+      "category": "3",
+      "id": "9",
+      "image": "3e5d8a0ee01991-sinhtxoiphclong.png",
+      "name": "Sinh Tố Xoài",
+      "price": "35000",
+      "toppings": [
+        1,
+        3
+      ]
+    },
+    {
+      "category": "3",
+      "id": "10",
+      "image": "1dc0ad6ea929b2-sinhtchanh.png",
+      "name": "Sinh Tố Chanh",
+      "price": "35000",
+      "toppings": [
+        1,
+        3
+      ]
+    }
   ]
 }
