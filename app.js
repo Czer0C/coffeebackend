@@ -2,7 +2,7 @@ const express = require('express');
 const low = require('lowdb');
 const bodyParser = require('body-parser');
 const FileSync = require('lowdb/adapters/FileSync');
-
+const cors = require('cors');
 const productName = "products";
 const categoryName = "category";
 const ordersName = "orders";
@@ -25,10 +25,14 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/images'));
-const PORT = 3000;
+
+app.use(cors());
+
+const PORT = 3001;
 
 app.get('/', (req, res) => {
   const ret = 'hello from products api';
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.json(ret);
 })
 
@@ -140,6 +144,15 @@ app.get('/orders/:id', (req, res) => {
 })
 
 // end orders
+
+// topping
+app.get('/topping', (req, res) => {
+  const topping = toppingsData.get(toppingsName);
+  console.log(topping)
+  res.json(topping);
+})
+
+// end otopping
 
 app.listen(PORT, () => {
   console.log(`API running on port http:\\localhost:${PORT}`);
