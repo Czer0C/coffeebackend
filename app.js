@@ -1,8 +1,12 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const low = require('lowdb');
+const multer = require('multer');
+const fs = require("fs");
 const bodyParser = require('body-parser');
 const FileSync = require('lowdb/adapters/FileSync');
 const cors = require('cors');
+const { Console } = require('console');
 const productName = "products";
 const categoryName = "category";
 const ordersName = "orders";
@@ -26,14 +30,43 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/images'));
 
-app.use(cors());
-
 const PORT = 3001;
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/images')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+
+var upload = multer({ storage: storage })
+app.use(fileUpload())
+app.use(cors());
 
 app.get('/', (req, res) => {
   const ret = 'hello from products api';
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.json(ret);
+})
+
+// Update load image
+app.post('/upload', (req, res) => {
+  // console.log(req.body)
+  var file = req.files.file;
+  let path = __dirname + "/images/" + file.name;
+  fs.writeFile(path, file.data, function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      response = {
+        message: 'File uploaded successfully',
+        filename: req.files.file.name
+      };
+    }
+    console.log(response);
+    res.end(JSON.stringify(response));
+  });
 })
 
 // product api
@@ -45,7 +78,7 @@ app.get('/products', (req, res) => {
 app.get('/products/:id', (req, res) => {
   const id = +req.params.id;
   const ret = productsData.get(productName)
-    .find({ id })
+    .find({ id: id.toString() })
     .value();
   res.json(ret);
 })
@@ -53,35 +86,90 @@ app.get('/products/:id', (req, res) => {
 app.get('/products/category/:id', (req, res) => {
   const category = +req.params.id;
   const ret = productsData.get(productName)
-    .chain().filter({ category }).value();
+    .chain().filter({ category: category.toString() }).value();
   res.json(ret);
 })
 
+app.get('/products/searchbyname/:name', (req, res) => {
+  let name = req.params.name;
+  console.log(name)
+  const products = productsData.get(productName).value();
+  let result = products.filter(x => {
+    let productName = x.name.toLowerCase();
+    return productName.includes(name.toLowerCase())
+  })
+  res.json(result);
+})
+
 app.post('/products/add', (req, res) => {
-  const obj = req.body;
-  try{
+  var data = Object.assign({}, req.body);
+  var file = req.files.file;
+  try {
+    var id = Date.now().toString();
+    var obj = {
+      "category": data.category,
+      id,
+      "image": file.name,
+      "name": data.name,
+      "price": data.price.toString(),
+      "toppings": data.topping.split(',').map(x => parseInt(x))
+    }
+    console.log(obj)
+    let path = __dirname + "/images/" + file.name;
+    fs.writeFile(path, file.data, function (err) {
+      if (err) {
+        console.log(err);
+        res.status(500).send({error: 'Fail to create product'});
+      }
+    });
     const ret = productsData.get(productName)
-    .push(obj)
-    .write();
+      .push(obj)
+      .write();
     res.send("OK");
-  }catch(err){
-    res.send(err);
+  } catch (err) {
+    res.status(500).send({error: 'Fail to create product'});
   }
 })
 
 app.post('/products/edit', (req, res) => {
-  const obj = req.body;
-  try{
+  var data = Object.assign({}, req.body);
+  var file = req.files.file;
+  try {
+
     const ret = productsData.get(productName)
-    .chain().find({ id: obj.id});
-    if(!ret.value())
-      res.status(400).send({err: "fail"});
-   
+      .chain().find({ id: data.id.toString() });
+    if (!ret.value())
+      res.status(400).send({ err: "fail" });
+
+    let path = __dirname + "/images/" + file.name;
+    fs.writeFile(path, file.data, function (err) {
+      if (err) {
+        console.log(err);
+        res.status(500).send({error: 'Fail to create product'});
+      }
+    });
+
+    let obj = {}
+    console.log(obj)
+    console.log(ret.value())
+    obj.category = data.category
+    obj.image = file.name
+    obj.name = data.name
+    obj.price = data.price.toString()
+    obj.toppings = data.topping.split(',').map(x => parseInt(x))
+
     ret.assign(obj).write();
     res.send("OK");
-  }catch(err){
+  } catch (err) {
     res.status(400).send(err);
   }
+})
+
+
+app.get('/products/delete/:id', (req, res) => {
+  const id = +req.params.id;
+  const ret = productsData.get(productName).remove({ id: id.toString() }).write()
+  res.json(ret);
 })
 // end products
 
@@ -93,27 +181,27 @@ app.get('/category', (req, res) => {
 
 app.post('/category/add', (req, res) => {
   const obj = req.body;
-  try{
+  try {
     const ret = categoryData.get(categoryName)
-    .push(obj)
-    .write();
+      .push(obj)
+      .write();
     res.send("OK");
-  }catch(err){
+  } catch (err) {
     res.send(err);
   }
 })
 
 app.post('/category/edit', (req, res) => {
   const obj = req.body;
-  try{
+  try {
     const ret = categoryData.get(categoryName)
-    .chain().find({ id: obj.id});
-    if(!ret.value())
-      res.status(400).send({err: "fail"});
-   
+      .chain().find({ id: obj.id });
+    if (!ret.value())
+      res.status(400).send({ err: "fail" });
+
     ret.assign(obj).write();
     res.send("OK");
-  }catch(err){
+  } catch (err) {
     res.status(400).send(err);
   }
 })
@@ -127,12 +215,12 @@ app.get('/orders', (req, res) => {
 
 app.post('/orders/add', (req, res) => {
   const obj = req.body;
-  try{
+  try {
     const ret = ordersData.get(ordersName)
-    .push(obj)
-    .write();
+      .push(obj)
+      .write();
     res.send("OK");
-  }catch(err){
+  } catch (err) {
     res.send(err);
   }
 })
@@ -148,7 +236,6 @@ app.get('/orders/:id', (req, res) => {
 // topping
 app.get('/topping', (req, res) => {
   const topping = toppingsData.get(toppingsName);
-  console.log(topping)
   res.json(topping);
 })
 
