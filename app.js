@@ -71,8 +71,11 @@ app.post('/upload', (req, res) => {
 
 // product api
 app.get('/products', (req, res) => {
-  const products = productsData.get(productName);
-  res.json(products.value());
+  const products = productsData.get(productName).value();
+  let result = products.filter(x => {
+    return  !x.unActived
+  })
+  res.json(result);
 })
 
 app.get('/products/:id', (req, res) => {
@@ -86,18 +89,40 @@ app.get('/products/:id', (req, res) => {
 app.get('/products/category/:id', (req, res) => {
   const category = +req.params.id;
   const ret = productsData.get(productName)
-    .chain().filter({ category: category.toString() }).value();
-  res.json(ret);
+    .chain().filter({ category: category.toString()}).value();
+  let result = ret.filter(x => {
+    return  !x.unActived
+  })
+  res.json(result);
 })
 
-app.get('/products/searchbyname/:name', (req, res) => {
+app.get('/products/removed/:id', (req, res) => {
+  const id = +req.params.id;
+  let result = [];
+  if (id == '0'){
+    result = productsData.get(productName).chain().filter({unActived: true }).value();
+  }
+  else {
+    result = productsData.get(productName).chain().filter({ category: id.toString(), unActived: true }).value();
+  }
+  res.json(result);
+})
+
+app.get('/products/searchbyname/:name/:isActived', (req, res) => {
   let name = req.params.name;
-  console.log(name)
+  let isActived = req.params.isActived;
   const products = productsData.get(productName).value();
-  let result = products.filter(x => {
-    let productName = x.name.toLowerCase();
-    return productName.includes(name.toLowerCase())
-  })
+  let result = []
+  if(name.trim() !== '' && name != 'undefined'){
+    result = products.filter(x => {
+      let productName = x.name.toLowerCase();
+      return productName.includes(name.toLowerCase()) && !x.unActived == JSON.parse(isActived.toLowerCase())
+    })
+  }else {
+    result = products.filter(x => {
+      return !x.unActived == JSON.parse(isActived.toLowerCase())
+    })
+  }
   res.json(result);
 })
 
@@ -165,10 +190,22 @@ app.post('/products/edit', (req, res) => {
   }
 })
 
+app.post('/products/delete', (req, res) => {
+  const data = req.body;
+  const ret = productsData.get(productName).chain().find({ id: data.id.toString() });
+  let obj = Object.assign({}, ret.value())
+  obj.unActived = true;
+  obj.note = data.reason;
+  ret.assign(obj).write();
+  res.json(ret);
+})
 
-app.get('/products/delete/:id', (req, res) => {
+app.get('/products/undo/:id', (req, res) => {
   const id = +req.params.id;
-  const ret = productsData.get(productName).remove({ id: id.toString() }).write()
+  const ret = productsData.get(productName).chain().find({ id: id.toString() });
+  let obj = Object.assign({}, ret.value())
+  obj.unActived = false
+  ret.assign(obj).write();
   res.json(ret);
 })
 // end products
