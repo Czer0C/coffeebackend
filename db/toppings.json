@@ -7,13 +7,13 @@
         },
         {
             "id": 2,
-            "price": 15000,
-            "value": "Trân châu trắng"
+            "price": 5000,
+            "value": "Sữa tươi"
         },
         {
             "id": 3,
-            "price": 5000,
-            "value": "Sữa tươi"
+            "price": 15000,
+            "value": "Trân châu trắng"
         }
     ]
 }
